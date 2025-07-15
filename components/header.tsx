@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Link from 'next/link';
 import { NavigationBar } from './navigation-bar';
+import { getAssetPath } from '@/lib/paths';
 
 export function Header() {
   const currentDate = format(new Date(), "eeee, d 'de' MMMM 'de' yyyy", { locale: es });
@@ -30,7 +31,7 @@ export function Header() {
       <div
         className="bg-cover bg-center flex items-center py-40"
         style={{
-          backgroundImage: "url('/fondo.jpg')"
+          backgroundImage: `url('${getAssetPath('/fondo.jpg')}')`
         }}
       >
         <div className="max-w-7xl mx-auto px-7">
