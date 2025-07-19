@@ -1,11 +1,11 @@
 "use client"
-import { Header } from "@/components/header"
-import { Sidebar } from "@/components/sidebar"
-import { CreatePost } from "@/components/create-post"
-import { PostCard, Post } from "@/components/post-card"
-import { RightSidebar } from "@/components/right-sidebar"
-import { BackgroundSlider } from "@/components/background-slider"
-import { ExpandingCards } from "@/components/expanding-cards"
+import { Header } from "@/components/header/header"
+import { Sidebar } from "@/components/sidebar/sidebar"
+import { CreatePost } from "@/components/create-post/create-post"
+import { PostCard, Post } from "@/components/post-card/post-card"
+import { RightSidebar } from "@/components/right-sidebar/right-sidebar"
+import { BackgroundSlider } from "@/components/background-slider/background-slider"
+import { ExpandingCards } from "@/components/expanding-cards/expanding-cards"
 
 const posts: Post[] = [
   {

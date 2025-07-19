@@ -4,7 +4,7 @@ import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Link from 'next/link';
-import { NavigationBar } from './navigation-bar/navigation-bar';
+import { NavigationBar } from '../navigation-bar/navigation-bar';
 import { getAssetPath } from '@/lib/paths';
 
 export function Header() {

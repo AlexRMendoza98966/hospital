@@ -4,7 +4,7 @@ import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Link from 'next/link';
-import { NavigationBar } from './navigation-bar/navigation-bar';
+import { NavigationBar } from '../components/navigation-bar/navigation-bar';
 import { getAssetPath } from '@/lib/paths';
 
 export function Header() {
@@ -46,3 +46,9 @@ export function Header() {
     </header>
   );
 }
+
+<div className="flex justify-center items-center min-h-screen bg-gray-100">
+  <form className="bg-white p-8 rounded shadow-md w-full max-w-xl"> {/* Cambia max-w-md a max-w-xl o más grande */}
+    {/* ...campos de login... */}
+  </form>
+</div>

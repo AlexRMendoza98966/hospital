@@ -71,4 +71,5 @@ export const menuItems: MenuItem[] = [
   },
   { label: 'SOBRE NOSOTROS', href: '#' },
   { label: 'PRENSA', href: '#' },
+  { label: 'LOGIN', href: '/login' },
 ];
