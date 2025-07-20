@@ -5,6 +5,7 @@ const NavigationBar: React.FC = () => {
   const [sticky, setSticky] = useState(false);
 
   useEffect(() => {
+    // Solo se ejecuta en cliente, seguro para SSR
     const handleScroll = () => {
       setSticky(window.scrollY > 0);
     };
