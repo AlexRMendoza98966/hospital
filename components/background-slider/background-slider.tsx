@@ -5,10 +5,10 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import styles from './background-slider.module.css';
 
 const images = [
-  '/imagesFondoAnuncios/imagen1.jpg',
-  '/imagesFondoAnuncios/imagen2.jpg',
-  '/imagesFondoAnuncios/imagen3.jpg',
-  '/imagesFondoAnuncios/imagen4.jpg',
+  'imagesFondoAnuncios/imagen1.jpg',
+  'imagesFondoAnuncios/imagen2.jpg',
+  'imagesFondoAnuncios/imagen3.jpg',
+  'imagesFondoAnuncios/imagen4.jpg',
 ];
 
 export function BackgroundSlider() {

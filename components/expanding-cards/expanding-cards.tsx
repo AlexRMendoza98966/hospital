@@ -5,19 +5,19 @@ import styles from './expanding-cards.module.css';
 
 const panelData = [
   {
-    image: '/imagesSomos/imagensomos.jpg',
+    image: 'imagesSomos/imagensomos.jpg',
     title: 'Nuestra Misión',
   },
   {
-    image: '/imagesSomos/imagensomos1.jpg',
+    image: 'imagesSomos/imagensomos1.jpg',
     title: 'Nuestra Visión',
   },
   {
-    image: '/imagesSomos/imagensomos2.jpg',
+    image: 'imagesSomos/imagensomos2.jpg',
     title: 'Nuestros Valores',
   },
   {
-    image: '/imagesSomos/imagensomos3.jpg',
+    image: 'imagesSomos/imagensomos3.jpg',
     title: 'Nuestra Historia',
   },
 ];
