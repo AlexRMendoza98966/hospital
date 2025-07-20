@@ -16,7 +16,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-gray-100">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body className="bg-gray-100 min-h-screen flex flex-col">
         {children}
         <FooterConditional />
       </body>
@@ -24,4 +27,3 @@ export default function RootLayout({
   )
 }
 
-      

@@ -23,7 +23,7 @@ export function BackgroundSlider() {
   };
 
   return (
-    <div className={styles.sliderContainer}>
+    <div className={`${styles.sliderContainer} w-full max-w-4xl mx-auto`}>
       {images.map((src, index) => (
         <div
           key={src}
