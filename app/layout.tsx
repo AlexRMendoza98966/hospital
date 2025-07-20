@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { Footer } from '../components/footer/footer'
+import { FooterConditional } from '../components/footer/FooterConditional'
 
 export const metadata: Metadata = {
   title: 'v0 App',
@@ -16,7 +18,10 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-gray-100">
         {children}
+        <FooterConditional />
       </body>
     </html>
   )
 }
+
+      
