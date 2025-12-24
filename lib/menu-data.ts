@@ -5,71 +5,36 @@ export interface MenuItem {
 }
 
 export const menuItems: MenuItem[] = [
-  { label: 'Inicio', href: '#' },
+  { label: 'INICIO', href: '#' },
   {
     label: 'INSTITUCIONAL',
     href: '#',
     children: [
-      { label: 'MISIÓN Y VISIÓN', href: '#' },
-      { label: 'PRINCIPIOS Y VALORES', href: '#' },
-      { label: 'OBJETIVOS', href: '#' },
-      { label: 'AUTORIDADES', href: '#' },
-      { label: 'DIRECTORES DE HOSPITALES SEDES LA PAZ', href: '#' },
-      { label: 'MARCO NORMATIVO', href: '#' },
-      { label: 'ORGANIGRAMA', href: '#' },
-      { label: 'HISTORIA', href: '#' },
+      { label: '1. Autoridades', href: '#' },
+      { label: '2. Comité técnico administrativo', href: '#' },
+      { label: '3. Académico', href: '#' },
+      { label: '4. Casos clínicos', href: '#' },
+      { label: '5. Residencia médica', href: '#' },
     ],
   },
   {
-    label: 'UNIDADES',
+    label: 'HOSPITAL',
     href: '#',
     children: [
-      { 
-        label: 'NIVEL EJECUTIVO', 
-        href: '#',
-        children: [
-          { label: 'Dirección Técnica Servicio Departamental de Salud', href: '#' }
-        ]
-      },
-      { 
-        label: 'NIVEL DE ASESORAMIENTO Y APOYO', 
-        href: '#',
-        children: [
-          { label: 'Unidad de Auditoria Interna', href: '#' },
-          { label: 'Unidad de Transparencia', href: '#' },
-          { label: 'Unidad De Comunicación, Protocolo Y Relaciones Públicas', href: '#' },
-        ]
-      },
+      { label: '1. Nuestro hospital', href: '#' },
+      { label: '2. Misión y visión', href: '#' },
+      { label: '3. Historia', href: '#' },
     ],
   },
   {
-    label: 'COMUNICADOS',
+    label: 'INFORMACION',
     href: '#',
     children: [
-      { label: 'BOLETINES', href: '#' },
-      { label: 'CAMPAÑAS', href: '#' },
-      { label: 'CIRCULARES', href: '#' },
-      { label: 'CONVOCATORIAS', href: '#' },
-      { label: 'LABORATORIOS AUTORIZADOS', href: '#' },
+      { label: '1. Consulta externa', href: '#' },
+      { label: '2. Cartera de servicios', href: '#' },
     ],
   },
-  {
-    label: 'PUBLICACIONES',
-    href: '#',
-    children: [
-      { label: 'LIBROS', href: '#' },
-      { label: 'Covid-19', href: '#' },
-    ],
-  },
-  {
-    label: 'TRANSPARENCIA',
-    href: '#',
-    children: [
-      { label: 'RESOLUCIONES ADMINISTRATIVAS', href: '#' },
-      { label: 'INFORME DE AUDITORIAS INTERNAS', href: '#' },
-    ],
-  },
-  { label: 'SOBRE NOSOTROS', href: '#' },
-  { label: 'PRENSA', href: '#' },
+  { label: 'AUDITORIA', href: '#' },
+  { label: 'TRANSPARENCIA', href: '#' },
   { label: 'LOGIN', href: '/login' },
 ];

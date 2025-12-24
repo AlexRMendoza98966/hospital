@@ -1,0 +1,14 @@
+{
+  "name": "mi/hospital-home",
+  "description": "Dependencias PHP (si se requieren)",
+  "type": "project",
+  "require": {
+    "php": ">=7.4"
+  },
+  "autoload": {
+    "psr-4": { "App\\\\": "src/" }
+  },
+  "scripts": {
+    "db:check": "echo \"No PHP DB scripts configurados. Busca .env o config/database.php\""
+  }
+}
