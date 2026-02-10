@@ -34,7 +34,7 @@ export const menuItems: MenuItem[] = [
       { label: '2. Cartera de servicios', href: '#' },
     ],
   },
-  { label: 'AUDITORIA', href: '#' },
+  { label: 'AUDITORIA', href: '/auditoria' },
   { label: 'TRANSPARENCIA', href: '#' },
   { label: 'INICIAR SESIÓN', href: '/login' },
 ];
