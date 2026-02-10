@@ -6,15 +6,18 @@ import { PostCard, Post } from "@/components/post-card/post-card"
 import { BackgroundSlider } from "@/components/background-slider/background-slider"
 import { ExpandingCards } from "@/components/expanding-cards/expanding-cards"
 
-const posts: Post[] = [
+import { useState } from "react"
+import { useAuth } from "@/context/AuthContext"
+
+const initialPosts: Post[] = [
 	{
 		id: 1,
 		type: "comunicado",
 		author: {
-			name: "Dirección General",
+			name: "Hospital del Niño Dr. Ovidio Aliaga Uría",
 			avatar: "/placeholder.svg?height=40&width=40",
 			time: "2h",
-			department: "Administración",
+			department: "",
 		},
 		title: "Nuevos Horarios de Atención",
 		content:
@@ -30,10 +33,10 @@ const posts: Post[] = [
 		id: 2,
 		type: "convocatoria",
 		author: {
-			name: "Recursos Humanos",
+			name: "Hospital del Niño Dr. Ovidio Aliaga Uría",
 			avatar: "/placeholder.svg?height=40&width=40",
 			time: "4h",
-			department: "RRHH",
+			department: "",
 		},
 		title: "Convocatoria: Enfermero/a Especializado/a",
 		content:
@@ -48,10 +51,10 @@ const posts: Post[] = [
 		id: 3,
 		type: "anuncio",
 		author: {
-			name: "Departamento de Cardiología",
+			name: "Hospital del Niño Dr. Ovidio Aliaga Uría",
 			avatar: "/placeholder.svg?height=40&width=40",
 			time: "6h",
-			department: "Cardiología",
+			department: "",
 		},
 		title: "Campaña de Prevención Cardiovascular",
 		content:
@@ -66,29 +69,73 @@ const posts: Post[] = [
 ]
 
 export default function HomePage() {
-	return (
-		<div className="min-h-screen">
-			<Header />
-			<div className="flex max-w-7xl mx-auto pt-4">
-				<Sidebar />
-				<main className="flex-1 px-4 w-full">
-					<CreatePost />
-					<div className="space-y-4 mt-4">
-						{posts.map((post) => (
-							<PostCard key={post.id} post={post} />
-						))}
-					</div>
-				</main>
-			</div>
-			<div className="max-w-7xl mx-auto px-4 pb-4">
-				<BackgroundSlider />
-			</div>
-			<section className="max-w-7xl mx-auto px-4 py-8">
-				<h2 className="text-3xl font-bold text-center text-gray-800 mb-4">
-					Quiénes Somos
-				</h2>
-				<ExpandingCards />
-			</section>
-		</div>
-	)
+ const [posts, setPosts] = useState<Post[]>(initialPosts);
+ const [pinnedId, setPinnedId] = useState<number | null>(null);
+ const { isAuthenticated, logout } = useAuth();
+
+	// Eliminar publicación
+	const handleDelete = (id: number) => {
+		setPosts((prev) => prev.filter((p) => p.id !== id));
+		if (pinnedId === id) setPinnedId(null);
+	};
+
+	// Anclar publicación (solo una a la vez)
+	const handlePin = (id: number) => {
+		setPinnedId(id);
+		// Opcional: mover la publicación anclada al principio
+		setPosts((prev) => {
+			const postToPin = prev.find((p) => p.id === id);
+			if (!postToPin) return prev;
+			const others = prev.filter((p) => p.id !== id);
+			return [postToPin, ...others];
+		});
+	};
+
+	// Editar publicación
+	const handleEdit = (id: number, title: string, content: string) => {
+		setPosts((prev) => prev.map((p) => p.id === id ? { ...p, title, content } : p));
+	};
+
+	 return (
+		 <div className="min-h-screen">
+			 <Header />
+			 {isAuthenticated && (
+				 <div className="flex justify-end p-4">
+					 <button
+						 onClick={logout}
+						 className="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700"
+					 >
+						 Cerrar sesión
+					 </button>
+				 </div>
+			 )}
+			 <div className="flex pt-4 mx-auto max-w-7xl">
+				 <Sidebar />
+				 <main className="flex-1 w-full px-4">
+					 <CreatePost />
+					 <div className="mt-4 space-y-4">
+						 {posts.map((post) => (
+							 <PostCard
+								 key={post.id}
+								 post={post}
+								 onDelete={handleDelete}
+								 onPin={handlePin}
+								 isPinned={pinnedId === post.id}
+								 onEdit={handleEdit}
+							 />
+						 ))}
+					 </div>
+				 </main>
+			 </div>
+			 <div className="px-4 pb-4 mx-auto max-w-7xl">
+				 <BackgroundSlider />
+			 </div>
+			 <section className="px-4 py-8 mx-auto max-w-7xl">
+				 <h2 className="mb-4 text-3xl font-bold text-center text-gray-800">
+					 Quiénes Somos
+				 </h2>
+				 <ExpandingCards />
+			 </section>
+		 </div>
+	 )
 }

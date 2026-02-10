@@ -1,10 +1,19 @@
 "use client"
+
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { login, isAuthenticated, logout } = useAuth();
+
+  useEffect(() => {
+    logout();
+  }, []);
 
   useEffect(() => {
     const password = document.getElementById('password')
@@ -19,6 +28,12 @@ export default function LoginPage() {
       })
     }
   }, [])
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/"); // Redirige al inicio después de login
+    }
+  }, [isAuthenticated, router]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -45,8 +60,8 @@ export default function LoginPage() {
 
       const data = await res.json();
       if (data.success) {
-        alert(`Bienvenido ${data.user.nombre_completo}`);
-        // Redirigir o guardar sesión aquí
+        login(data.user); // Marca sesión iniciada
+        // Redirección automática por useEffect
       } else {
         alert("Credenciales incorrectas");
       }

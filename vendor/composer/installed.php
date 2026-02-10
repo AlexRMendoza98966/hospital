@@ -3,7 +3,7 @@
         'name' => 'mi/hospital-home',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '365cede36b378dfbcf3feb30241a00d1529d219a',
+        'reference' => '8383e39dcde1e397790e422823e4f6edfbf21c6b',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'mi/hospital-home' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '365cede36b378dfbcf3feb30241a00d1529d219a',
+            'reference' => '8383e39dcde1e397790e422823e4f6edfbf21c6b',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

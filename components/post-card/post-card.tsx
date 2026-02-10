@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useAuth } from "@/context/AuthContext"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -28,7 +29,11 @@ export interface Post {
 }
 
 interface PostCardProps {
-  post: Post
+  post: Post;
+  onDelete?: (id: number) => void;
+  onPin?: (id: number) => void;
+  isPinned?: boolean;
+  onEdit?: (id: number, title: string, content: string) => void;
 }
 
 const typeConfig = {
@@ -43,14 +48,41 @@ const priorityConfig = {
   alta: { color: "bg-red-100 text-red-700", label: "Prioridad Alta" },
 }
 
-export function PostCard({ post }: PostCardProps) {
+export function PostCard({ post, onDelete, onPin, isPinned, onEdit }: PostCardProps) {
   const [liked, setLiked] = useState(post.liked)
   const [likesCount, setLikesCount] = useState(post.likes)
+  const { isAuthenticated, user } = useAuth();
+  const [editMode, setEditMode] = useState(false);
+  const [editTitle, setEditTitle] = useState(post.title);
+  const [editContent, setEditContent] = useState(post.content);
 
   const handleLike = () => {
     setLiked(!liked)
     setLikesCount(liked ? likesCount - 1 : likesCount + 1)
   }
+
+  const handleEdit = () => {
+    setEditMode(true);
+  };
+
+  const handleCancel = () => {
+    setEditMode(false);
+    setEditTitle(post.title);
+    setEditContent(post.content);
+  };
+
+  const handleSave = () => {
+    setEditMode(false);
+    if (onEdit) onEdit(post.id, editTitle, editContent);
+  };
+
+  const handleDelete = () => {
+    if (onDelete) onDelete(post.id);
+  };
+
+  const handlePin = () => {
+    if (onPin) onPin(post.id);
+  };
 
   const typeInfo = typeConfig[post.type]
   const priorityInfo = priorityConfig[post.priority]
@@ -64,20 +96,34 @@ export function PostCard({ post }: PostCardProps) {
             <div className="flex items-center space-x-3">
               <Avatar>
                 <AvatarImage src={post.author.avatar || "/placeholder.svg"} />
-                <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
+                <AvatarFallback>HN</AvatarFallback>
               </Avatar>
               <div>
-                <h3 className="font-semibold">{post.author.name}</h3>
-                <p className="text-sm text-gray-500">
-                  {post.author.department} • {post.author.time}
-                </p>
+                <h3 className="font-semibold">Hospital del Niño Dr. Ovidio Aliaga Uría</h3>
+                <p className="text-sm text-gray-500">{post.author.time}</p>
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              {post.priority === "alta" && <Pin className="h-4 w-4 text-red-600" />}
-              <Button variant="ghost" size="icon">
-                <MoreHorizontal className="h-4 w-4" />
+              <Button
+                variant={isPinned ? "default" : "outline"}
+                size="icon"
+                className={isPinned ? "bg-yellow-400 text-white" : ""}
+                onClick={isAuthenticated && user?.rol === 'admin' ? handlePin : undefined}
+                title={isPinned ? "Desanclar" : "Anclar publicación"}
+              >
+                <Pin className={isPinned ? "h-4 w-4 text-yellow-700" : "h-4 w-4 text-gray-400"} />
               </Button>
+              {isAuthenticated && user?.rol === 'admin' && (
+                <>
+                  <Button variant="ghost" size="icon">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                  {!editMode && (
+                    <Button variant="outline" size="sm" className="ml-2" onClick={handleEdit}>Editar</Button>
+                  )}
+                  <Button variant="destructive" size="sm" className="ml-2" onClick={handleDelete}>Eliminar</Button>
+                </>
+              )}
             </div>
           </div>
 
@@ -91,11 +137,33 @@ export function PostCard({ post }: PostCardProps) {
             </Badge>
           </div>
 
-          {/* Título */}
-          <h2 className="text-lg font-bold text-gray-900 mb-2">{post.title}</h2>
-
-          {/* Contenido */}
-          <p className="text-gray-700 leading-relaxed">{post.content}</p>
+          {/* Título y Contenido editables para admin */}
+          {editMode ? (
+            <>
+              <input
+                className="text-lg font-bold text-gray-900 mb-2 w-full border rounded px-2 py-1 mb-2"
+                value={editTitle}
+                onChange={e => setEditTitle(e.target.value)}
+              />
+              <textarea
+                className="text-gray-700 leading-relaxed w-full border rounded px-2 py-1 mb-2"
+                value={editContent}
+                onChange={e => setEditContent(e.target.value)}
+                rows={3}
+              />
+              <div className="flex gap-2 mb-2">
+                <Button variant="default" size="sm" onClick={handleSave}>Guardar</Button>
+                <Button variant="secondary" size="sm" onClick={handleCancel}>Cancelar</Button>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Título */}
+              <h2 className="text-lg font-bold text-gray-900 mb-2">{editTitle}</h2>
+              {/* Contenido */}
+              <p className="text-gray-700 leading-relaxed">{editContent}</p>
+            </>
+          )}
         </div>
 
         {/* Imagen del post */}

@@ -13,13 +13,13 @@ export function Header() {
   return (
     <header>
       {/* Top bar with social icons and date */}
-      <div className="bg-gray-800 text-white py-2">
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center text-sm">
+      <div className="py-2 text-white bg-gray-800">
+        <div className="flex items-center justify-between px-6 mx-auto text-sm max-w-7xl">
           <div className="flex items-center space-x-4">
-            <a href="#" aria-label="Facebook" className="hover:text-blue-500 transition-colors"><Facebook size={18} /></a>
-            <a href="#" aria-label="Twitter" className="hover:text-sky-400 transition-colors"><Twitter size={18} /></a>
-            <a href="#" aria-label="Instagram" className="hover:text-pink-500 transition-colors"><Instagram size={18} /></a>
-            <a href="#" aria-label="YouTube" className="hover:text-red-600 transition-colors"><Youtube size={18} /></a>
+            <a href="#" aria-label="Facebook" className="transition-colors hover:text-blue-500"><Facebook size={18} /></a>
+            <a href="#" aria-label="Twitter" className="transition-colors hover:text-sky-400"><Twitter size={18} /></a>
+            <a href="#" aria-label="Instagram" className="transition-colors hover:text-pink-500"><Instagram size={18} /></a>
+            <a href="#" aria-label="YouTube" className="transition-colors hover:text-red-600"><Youtube size={18} /></a>
           </div>
           <div className="capitalize">
             {currentDate}
@@ -29,14 +29,14 @@ export function Header() {
 
       {/* Main Header with Background Image */}
       <div
-        className="bg-cover bg-center flex items-center py-40"
+        className="flex items-center py-40 bg-center bg-cover"
         style={{
           backgroundImage: `url('${getAssetPath('/fondo.jpg')}')`
         }}
       >
-        <div className="max-w-7xl mx-auto px-7">
+        <div className="mx-auto max-w-7xl px-7">
           <Link href="/">
-            <h1 className="text-5xl font-extrabold text-white tracking-tight text-center" style={{ textShadow: '3px 3px 8px rgba(0,0,0,0.8)' }}>
+            <h1 className="text-5xl font-extrabold tracking-tight text-center text-white" style={{ textShadow: '3px 3px 8px rgba(0,0,0,0.8)' }}>
               HOSPITAL DEL NIÑO OVIDIO ALIAGA URÍA
             </h1>
           </Link>
