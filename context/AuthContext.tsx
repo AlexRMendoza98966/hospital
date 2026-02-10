@@ -1,19 +1,27 @@
-"use client"
+"use client";
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+
+interface UserType {
+  rol?: string;
+  nombre_completo?: string;
+  [key: string]: any;
+}
+
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: { rol?: string } | null;
+  user: UserType | null;
   login: (userData?: any) => void;
   logout: () => void;
 }
 
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<{ rol?: string } | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
   const router = useRouter();
 
   useEffect(() => {

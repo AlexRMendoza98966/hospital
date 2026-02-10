@@ -5,14 +5,14 @@ export interface MenuItem {
 }
 
 export const menuItems: MenuItem[] = [
-  { label: 'INICIO', href: '#' },
+  { label: 'INICIO', href: '/' },
   {
     label: 'INSTITUCIONAL',
     href: '#',
     children: [
-      { label: '1. Autoridades', href: '#' },
-      { label: '2. Comité técnico administrativo', href: '#' },
-      { label: '3. Académico', href: '#' },
+      { label: '1. Autoridades', href: '/autoridades-create-post' },
+      { label: '2. Comité técnico administrativo', href: '/comite-tecnico-administrativo' },
+      { label: '3. Académico', href: '/academico' },
       { label: '4. Casos clínicos', href: '#' },
       { label: '5. Residencia médica', href: '#' },
     ],
@@ -21,9 +21,9 @@ export const menuItems: MenuItem[] = [
     label: 'HOSPITAL',
     href: '#',
     children: [
-      { label: '1. Nuestro hospital', href: '#' },
-      { label: '2. Misión y visión', href: '#' },
-      { label: '3. Historia', href: '#' },
+      { label: '1. Nuestro hospital', href: '/nuestro-hospital' },
+      { label: '2. Misión y visión', href: '/mision-vision' },
+      { label: '3. Historia', href: '/historia' },
     ],
   },
   {
@@ -36,5 +36,5 @@ export const menuItems: MenuItem[] = [
   },
   { label: 'AUDITORIA', href: '#' },
   { label: 'TRANSPARENCIA', href: '#' },
-  { label: 'LOGIN', href: '/login' },
+  { label: 'INICIAR SESIÓN', href: '/login' },
 ];

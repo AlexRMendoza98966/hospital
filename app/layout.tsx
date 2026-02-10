@@ -1,15 +1,16 @@
-import type { Metadata } from 'next'
-import './globals.css'
 
-import { Footer } from '../components/footer/footer'
-import { FooterConditional } from '../components/footer/FooterConditional'
-import { AuthProvider } from '../context/AuthContext'
+
+import type { Metadata } from 'next';
+import './globals.css';
+import { Footer } from '../components/footer/footer';
+import ClientLayout from './ClientLayout';
+
 
 export const metadata: Metadata = {
   title: 'v0 App',
   description: 'Created with v0',
   generator: 'v0.dev',
-}
+};
 
 export default function RootLayout({
   children,
@@ -22,12 +23,9 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body className="bg-gray-100 min-h-screen flex flex-col">
-        <AuthProvider>
-          {children}
-          <FooterConditional />
-        </AuthProvider>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
-  )
+  );
 }
 

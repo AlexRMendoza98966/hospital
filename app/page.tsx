@@ -99,16 +99,6 @@ export default function HomePage() {
 	 return (
 		 <div className="min-h-screen">
 			 <Header />
-			 {isAuthenticated && (
-				 <div className="flex justify-end p-4">
-					 <button
-						 onClick={logout}
-						 className="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700"
-					 >
-						 Cerrar sesión
-					 </button>
-				 </div>
-			 )}
 			 <div className="flex pt-4 mx-auto max-w-7xl">
 				 <Sidebar />
 				 <main className="flex-1 w-full px-4">
