@@ -27,9 +27,8 @@ export function Header() {
         </div>
       </div>
 
-      {/* Main Header with Background Image */}
       <div
-        className="flex items-center py-40 bg-center bg-cover"
+        className="flex items-center py-80 bg-center bg-cover"
         style={{
           backgroundImage: `url('${getAssetPath('/fondo.jpg')}')`
         }}
@@ -37,7 +36,7 @@ export function Header() {
         <div className="mx-auto max-w-7xl px-7">
           <Link href="/">
             <h1 className="text-5xl font-extrabold tracking-tight text-center text-white" style={{ textShadow: '3px 3px 8px rgba(0,0,0,0.8)' }}>
-              HOSPITAL DEL NIÑO OVIDIO ALIAGA URÍA
+              HOSPITAL DEL NIÑO DR. OVIDIO ALIAGA URÍA
             </h1>
           </Link>
         </div>
