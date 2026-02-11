@@ -1,11 +1,15 @@
 "use client"
 
 import { NavigationBar } from "../../components/navigation-bar/navigation-bar";
-import { useAuth } from "../../context/AuthContext";
-import { useEffect, useState } from "react";
-import { Eye, Download } from "lucide-react";
+import { useEffect, useState, useCallback } from "react";
+import { Eye, Download, FileText, Calendar, Search, Filter, Trash2 } from "lucide-react";
 import AddAuditoriaModal from "./AddAuditoriaModal";
-import { getAuditorias } from "./actions";
+import { getAuditorias, deleteAuditoria } from "./actions";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 
 interface Report {
     id: number;
@@ -15,13 +19,13 @@ interface Report {
 }
 
 export default function AuditoriaPage() {
-    const { user } = useAuth();
     const [reports, setReports] = useState<Report[]>([]);
+    const [filteredReports, setFilteredReports] = useState<Report[]>([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const { user } = useAuth();
 
-    useEffect(() => {
-        // Cargar datos reales desde el Server Action
+    const fetchReports = useCallback(() => {
         getAuditorias().then(data => {
-            // Mapear los datos si es necesario para asegurar compatibilidad con la interfaz
             const mappedData: Report[] = data.map((item: any) => ({
                 id: item.id,
                 fecha: item.fecha,
@@ -29,67 +33,142 @@ export default function AuditoriaPage() {
                 archivo: item.archivo
             }));
             setReports(mappedData);
+            setFilteredReports(mappedData);
         });
-    }, []); // Se ejecuta solo al montar
+    }, []);
+
+    const handleDelete = async (id: number) => {
+        if (confirm("¿Estás seguro de que quieres eliminar este informe?")) {
+            const res = await deleteAuditoria(id);
+            if (res.success) {
+                fetchReports();
+            } else {
+                alert(res.message);
+            }
+        }
+    };
+
+    const handleSuccess = useCallback(() => {
+        fetchReports();
+    }, [fetchReports]);
+
+    useEffect(() => {
+        fetchReports();
+    }, [fetchReports]);
+
+    useEffect(() => {
+        const results = reports.filter(report =>
+            report.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            report.fecha.includes(searchTerm)
+        );
+        setFilteredReports(results);
+    }, [searchTerm, reports]);
+
+    const isAuditor = user?.rol === 'auditoria';
 
     return (
-        <>
+        <div className="min-h-screen bg-gray-50">
             <NavigationBar />
-            <div className="max-w-6xl mx-auto py-12 px-4">
-                <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-3xl font-bold text-blue-900">Auditoría</h1>
-                    {/* Componente Modal que maneja su propia visibilidad según el rol */}
-                    <AddAuditoriaModal />
-                </div>
 
-                <div className="bg-white rounded-lg shadow overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
-                            <thead>
-                                <tr className="bg-gray-100 border-b border-gray-200">
-                                    <th className="py-4 px-6 font-semibold text-gray-700 w-1/4">Fecha de publicación</th>
-                                    <th className="py-4 px-6 font-semibold text-gray-700 w-1/2">PUBLICACIÓN DE INFORMES</th>
-                                    <th className="py-4 px-6 font-semibold text-gray-700 w-1/4 text-center">Visualizar / Descargar</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {reports.map((report) => (
-                                    <tr key={report.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                                        <td className="py-4 px-6 text-gray-800">{report.fecha}</td>
-                                        <td className="py-4 px-6 text-gray-800 font-medium">{report.titulo}</td>
-                                        <td className="py-4 px-6">
-                                            <div className="flex justify-center gap-4">
-                                                <a
-                                                    href={report.archivo}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-full transition-colors"
-                                                    title="Visualizar"
-                                                >
-                                                    <Eye size={20} />
-                                                </a>
-                                                <a
-                                                    href={report.archivo}
-                                                    download
-                                                    className="p-2 text-green-600 hover:text-green-800 hover:bg-green-50 rounded-full transition-colors"
-                                                    title="Descargar"
-                                                >
-                                                    <Download size={20} />
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    {reports.length === 0 && (
-                        <div className="p-8 text-center text-gray-500">
-                            No hay informes disponibles.
-                        </div>
-                    )}
+            {/* Hero Section */}
+            <div className="bg-blue-900 text-white py-16 px-4">
+                <div className="max-w-7xl mx-auto text-center space-y-4">
+                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
+                        Auditoría Interna
+                    </h1>
+                    <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+                        Transparencia y gestión hospitalaria. Accede a los informes de auditoría y reportes de gestión.
+                    </p>
                 </div>
             </div>
-        </>
+
+            <div className="max-w-7xl mx-auto py-12 px-4 -mt-8">
+
+                {/* Controls & Search */}
+                <div className="bg-white p-6 rounded-xl shadow-lg mb-8 flex flex-col md:flex-row gap-4 items-center justify-between border border-gray-100">
+                    <div className="relative w-full md:w-96">
+                        <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                        <Input
+                            placeholder="Buscar informe..."
+                            className="pl-10 h-11"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="flex gap-2 w-full md:w-auto">
+                        <AddAuditoriaModal onSuccess={handleSuccess} />
+                    </div>
+                </div>
+
+                {/* Grid Layout for Reports */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredReports.map((report) => (
+                        <Card key={report.id} className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-t-4 border-t-blue-500 overflow-hidden group">
+                            <CardHeader className="bg-blue-50/50 pb-4">
+                                <div className="flex justify-between items-start">
+                                    <div className="p-2 bg-blue-100 rounded-lg text-blue-600 mb-3 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                        <FileText size={24} />
+                                    </div>
+                                    <Badge variant="secondary" className="bg-white hover:bg-white text-gray-500 shadow-sm">
+                                        <Calendar className="mr-1 h-3 w-3" />
+                                        {report.fecha}
+                                    </Badge>
+                                </div>
+                                <CardTitle className="text-xl leading-tight text-blue-950 font-bold line-clamp-2 min-h-[3.5rem]">
+                                    {report.titulo}
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="pt-6">
+                                <div className="flex gap-3">
+                                    <a
+                                        href={report.archivo}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex-1"
+                                    >
+                                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-md">
+                                            <Eye className="mr-2 h-4 w-4" /> Ver
+                                        </Button>
+                                    </a>
+                                    <a
+                                        href={report.archivo}
+                                        download
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex-none"
+                                    >
+                                        <Button variant="outline" size="icon" className="border-blue-200 text-blue-600 hover:bg-blue-50">
+                                            <Download className="h-4 w-4" />
+                                        </Button>
+                                    </a>
+                                    {isAuditor && (
+                                        <Button
+                                            variant="outline"
+                                            size="icon"
+                                            className="flex-none border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
+                                            onClick={() => handleDelete(report.id)}
+                                            title="Eliminar informe"
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+
+                {filteredReports.length === 0 && (
+                    <div className="text-center py-20 bg-white rounded-xl shadow-sm border border-dashed border-gray-300">
+                        <div className="bg-gray-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <Search className="text-gray-400 h-8 w-8" />
+                        </div>
+                        <h3 className="text-lg font-medium text-gray-900">No se encontraron informes</h3>
+                        <p className="text-gray-500 mt-1">Intenta con otros términos de búsqueda.</p>
+                    </div>
+                )}
+            </div>
+        </div>
     );
 }

@@ -29,14 +29,15 @@ export function Header() {
 
       {/* Main Header with Background Image */}
       <div
-        className="bg-cover bg-center flex items-center py-40"
+        className="bg-cover bg-center flex items-center justify-center h-[750px] relative"
         style={{
           backgroundImage: `url('${getAssetPath('/fondo.jpg')}')`
         }}
       >
-        <div className="max-w-7xl mx-auto px-7">
+        <div className="absolute inset-0 bg-black/30"></div> {/* Overlay oscuro opcional para mejorar legibilidad */}
+        <div className="max-w-7xl mx-auto px-4 relative z-150">
           <Link href="/">
-            <h1 className="text-5xl font-extrabold text-white tracking-tight text-center" style={{ textShadow: '3px 3px 8px rgba(0,0,0,0.8)' }}>
+            <h1 className="text-5xl md:text-6xl font-extrabold text-white tracking-tight text-center drop-shadow-lg" style={{ textShadow: '3px 3px 8px rgba(0,0,0,0.8)' }}>
               HOSPITAL DEL NIÑO OVIDIO ALIAGA URÍA
             </h1>
           </Link>

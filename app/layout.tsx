@@ -22,7 +22,7 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className="bg-gray-100 min-h-screen flex flex-col">
+      <body className="bg-zinc-100 min-h-screen flex flex-col">
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>

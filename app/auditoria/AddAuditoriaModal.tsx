@@ -21,21 +21,21 @@ function SubmitButton() {
     );
 }
 
-export default function AddAuditoriaModal() {
+export default function AddAuditoriaModal({ onSuccess }: { onSuccess?: () => void }) {
     const [isOpen, setIsOpen] = useState(false);
     const [state, formAction] = useActionState(createAuditoria, null);
     const { user } = useAuth(); // Obtener usuario del contexto
+    const [fileName, setFileName] = useState("");
 
     // Cerrar modal si el registro fue exitoso
     useEffect(() => {
         if (state?.success) {
             setIsOpen(false);
-            // Opcional: Mostrar notificación de éxito
-            alert(state.message);
+            if (onSuccess) onSuccess(); // Call the callback
         } else if (state?.message) {
             alert(state.message);
         }
-    }, [state]);
+    }, [state, onSuccess]);
 
     // Verificar si es auditor (rol 'auditoria' o similar)
     // Ajusta la condición según tu lógica real de roles
@@ -106,6 +106,20 @@ export default function AddAuditoriaModal() {
                                                         accept=".pdf"
                                                         required
                                                         className="sr-only"
+                                                        onChange={(e) => {
+                                                            const file = e.target.files?.[0];
+                                                            if (file) {
+                                                                if (file.size > 10 * 1024 * 1024) {
+                                                                    alert("El archivo excede el límite de 10MB");
+                                                                    e.target.value = ""; // Clear input
+                                                                    setFileName("");
+                                                                } else {
+                                                                    setFileName(file.name);
+                                                                }
+                                                            } else {
+                                                                setFileName("");
+                                                            }
+                                                        }}
                                                     />
                                                 </label>
                                                 <p className="pl-1">o arrastrar aquí</p>
@@ -113,6 +127,11 @@ export default function AddAuditoriaModal() {
                                             <p className="text-xs text-gray-500">
                                                 PDF hasta 10MB
                                             </p>
+                                            {fileName && (
+                                                <p className="text-sm font-medium text-green-600 mt-2">
+                                                    Seleccionado: {fileName}
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

@@ -11,7 +11,7 @@ const NavMenuItem = ({ item }: { item: MenuItem }) => {
   return (
     <li className={styles.navItem}>
       <Link href={item.href} className={styles.navLink}>
-        {item.label}
+        <span className="notranslate" translate="no">{item.label}</span>
         {item.children && <span className={styles.dropdownToggle}><ChevronDown size={16} /></span>}
       </Link>
       {item.children && (

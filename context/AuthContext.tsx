@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(null);
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('user');
-    router.push('/login');
+    // router.push('/login'); // Removed redirection as per user request
   };
 
   return (

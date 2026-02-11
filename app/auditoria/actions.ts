@@ -14,6 +14,12 @@ export async function createAuditoria(prevState: any, formData: FormData) {
             return { success: false, message: "Todos los campos son obligatorios" };
         }
 
+        // Validar tamaño del archivo (10MB)
+        const MAX_SIZE = 10 * 1024 * 1024; // 10MB en bytes
+        if (archivo.size > MAX_SIZE) {
+            return { success: false, message: "El archivo excede el límite de 10MB" };
+        }
+
         // 1. Guardar archivo en /public/uploads/
         const uploadsDir = path.join(process.cwd(), "public", "uploads");
 
@@ -64,8 +70,7 @@ export async function getAuditorias() {
     `;
         const result = await pool.query(query);
 
-        // Serializar fechas para pasar al cliente
-        return result.rows.map(row => ({
+        return result.rows.map((row: any) => ({
             id: row.id,
             fecha: new Date(row.fecha_publicacion).toISOString().split('T')[0], // YYYY-MM-DD
             titulo: row.nombre_informe,
@@ -74,5 +79,28 @@ export async function getAuditorias() {
     } catch (error) {
         console.error("Error obteniendo auditorias:", error);
         return [];
+    }
+}
+
+export async function deleteAuditoria(id: number) {
+    try {
+        const query = `
+          UPDATE public.auditoria
+          SET deleted_at = NOW()
+          WHERE id = $1
+          RETURNING *;
+        `;
+
+        const result = await pool.query(query, [id]);
+
+        if (result.rowCount === 0) {
+            return { success: false, message: "Informe no encontrado" };
+        }
+
+        revalidatePath("/auditoria");
+        return { success: true, message: "Informe eliminado correctamente" };
+    } catch (error) {
+        console.error("Error eliminando auditoria:", error);
+        return { success: false, message: "Error al eliminar el informe" };
     }
 }

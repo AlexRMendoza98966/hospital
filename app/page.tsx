@@ -6,83 +6,67 @@ import { PostCard, Post } from "@/components/post-card/post-card"
 import { BackgroundSlider } from "@/components/background-slider/background-slider"
 import { ExpandingCards } from "@/components/expanding-cards/expanding-cards"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAuth } from "@/context/AuthContext"
+import { getComunicados } from "@/app/actions"
 
 const initialPosts: Post[] = [
-	{
-		id: 1,
-		type: "comunicado",
-		author: {
-			name: "Hospital del Niño Dr. Ovidio Aliaga Uría",
-			avatar: "/placeholder.svg?height=40&width=40",
-			time: "2h",
-			department: "",
-		},
-		title: "Nuevos Horarios de Atención",
-		content:
-			"Informamos que a partir del lunes 15 de enero, los horarios de consulta externa serán de 7:00 AM a 6:00 PM de lunes a viernes, y de 8:00 AM a 2:00 PM los sábados.",
-		image: "/placeholder.svg?height=300&width=500",
-		likes: 45,
-		comments: 12,
-		shares: 8,
-		liked: false,
-		priority: "alta",
-	},
-	{
-		id: 2,
-		type: "convocatoria",
-		author: {
-			name: "Hospital del Niño Dr. Ovidio Aliaga Uría",
-			avatar: "/placeholder.svg?height=40&width=40",
-			time: "4h",
-			department: "",
-		},
-		title: "Convocatoria: Enfermero/a Especializado/a",
-		content:
-			"Se requiere enfermero/a con especialización en cuidados intensivos. Experiencia mínima 3 años. Enviar CV a rrhh@hospital.com hasta el 20 de enero.",
-		likes: 28,
-		comments: 15,
-		shares: 22,
-		liked: false,
-		priority: "media",
-	},
-	{
-		id: 3,
-		type: "anuncio",
-		author: {
-			name: "Hospital del Niño Dr. Ovidio Aliaga Uría",
-			avatar: "/placeholder.svg?height=40&width=40",
-			time: "6h",
-			department: "",
-		},
-		title: "Campaña de Prevención Cardiovascular",
-		content:
-			"Durante todo el mes de enero realizaremos chequeos cardiovasculares gratuitos. Agenda tu cita llamando al 123-456-7890. ¡Cuida tu corazón! ❤️",
-		image: "/placeholder.svg?height=250&width=400",
-		likes: 67,
-		comments: 8,
-		shares: 15,
-		liked: true,
-		priority: "alta",
-	},
+	// ... Mock data removed, now loading from DB
 ]
 
 export default function HomePage() {
- const [posts, setPosts] = useState<Post[]>(initialPosts);
- const [pinnedId, setPinnedId] = useState<number | null>(null);
- const { isAuthenticated, logout } = useAuth();
+	const [posts, setPosts] = useState<Post[]>([]);
+	const [pinnedId, setPinnedId] = useState<number | null>(null);
+	const { isAuthenticated, logout } = useAuth();
+	const [loading, setLoading] = useState(true);
 
-	// Eliminar publicación
+	// Fetch posts from DB
+	useEffect(() => {
+		async function loadPosts() {
+			try {
+				const data = await getComunicados();
+
+				// Map DB data to Post interface
+				const mappedPosts: Post[] = data.map((item: any) => ({
+					id: item.id,
+					type: item.tipo_publicacion,
+					author: {
+						name: "Hospital del Niño Dr. Ovidio Aliaga Uría",
+						avatar: "/logo_hospital.png",
+						time: new Date(item.created_at).toLocaleDateString(), // Simplificado por ahora
+						department: ""
+					},
+					title: item.titulo,
+					content: item.contenido,
+					image: item.imagen_path,
+					archivo: item.archivo_path,
+					likes: 0, // Mocked
+					comments: 0, // Mocked
+					shares: 0, // Mocked
+					liked: false, // Mocked
+					priority: item.prioridad || 'media'
+				}));
+
+				setPosts(mappedPosts);
+			} catch (error) {
+				console.error("Failed to load posts", error);
+			} finally {
+				setLoading(false);
+			}
+		}
+		loadPosts();
+	}, [loading]); // Reload when loading changes (e.g. after create)
+
+
+	// Eliminar publicación (Mocked for now in UI)
 	const handleDelete = (id: number) => {
 		setPosts((prev) => prev.filter((p) => p.id !== id));
 		if (pinnedId === id) setPinnedId(null);
 	};
 
-	// Anclar publicación (solo una a la vez)
+	// Anclar publicación
 	const handlePin = (id: number) => {
 		setPinnedId(id);
-		// Opcional: mover la publicación anclada al principio
 		setPosts((prev) => {
 			const postToPin = prev.find((p) => p.id === id);
 			if (!postToPin) return prev;
@@ -91,41 +75,53 @@ export default function HomePage() {
 		});
 	};
 
-	// Editar publicación
+	// Editar publicación (Mocked for now in UI)
 	const handleEdit = (id: number, title: string, content: string) => {
 		setPosts((prev) => prev.map((p) => p.id === id ? { ...p, title, content } : p));
 	};
 
-	 return (
-		 <div className="min-h-screen">
-			 <Header />
-			 <div className="flex pt-4 mx-auto max-w-7xl">
-				 <Sidebar />
-				 <main className="flex-1 w-full px-4">
-					 <CreatePost />
-					 <div className="mt-4 space-y-4">
-						 {posts.map((post) => (
-							 <PostCard
-								 key={post.id}
-								 post={post}
-								 onDelete={handleDelete}
-								 onPin={handlePin}
-								 isPinned={pinnedId === post.id}
-								 onEdit={handleEdit}
-							 />
-						 ))}
-					 </div>
-				 </main>
-			 </div>
-			 <div className="px-4 pb-4 mx-auto max-w-7xl">
-				 <BackgroundSlider />
-			 </div>
-			 <section className="px-4 py-8 mx-auto max-w-7xl">
-				 <h2 className="mb-4 text-3xl font-bold text-center text-gray-800">
-					 Quiénes Somos
-				 </h2>
-				 <ExpandingCards />
-			 </section>
-		 </div>
-	 )
+	// Force refresh helper passed to CreatePost? Or simple page reload for now.
+	// Better approach: CreatePost calls router.refresh() or setPosts.
+	// For simplicity, we can rely on page reload or simple state update if we lift state up.
+	// Since CreatePost calls revalidatePath('/'), next navigation should update it.
+
+	return (
+		<div className="min-h-screen">
+			<Header />
+			<div className="flex pt-4 mx-auto max-w-7xl">
+				<Sidebar />
+				<main className="flex-1 w-full px-4">
+					<CreatePost onSuccess={() => setLoading(true)} />
+					<div className="mt-4 space-y-4">
+						{/* If we just published, we might need to manually trigger refresh or rely on revalidatePath works */}
+						{posts.map((post) => (
+							<PostCard
+								key={post.id}
+								post={post}
+								onDelete={handleDelete}
+								onPin={handlePin}
+								isPinned={pinnedId === post.id}
+								onEdit={handleEdit}
+							/>
+						))}
+						{posts.length === 0 && !loading && (
+							<p className="text-center text-gray-500 py-8">No hay publicaciones recientes.</p>
+						)}
+						{loading && (
+							<p className="text-center text-gray-500 py-8">Cargando publicaciones...</p>
+						)}
+					</div>
+				</main>
+			</div>
+			<div className="px-4 pb-4 mx-auto max-w-7xl">
+				<BackgroundSlider />
+			</div>
+			<section className="px-4 py-8 mx-auto max-w-7xl">
+				<h2 className="mb-4 text-3xl font-bold text-center text-gray-800">
+					Quiénes Somos
+				</h2>
+				<ExpandingCards />
+			</section>
+		</div>
+	)
 }

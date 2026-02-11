@@ -5,7 +5,7 @@ import { useAuth } from "@/context/AuthContext"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Heart, MessageCircle, Share, MoreHorizontal, Pin } from "lucide-react"
+import { Heart, MessageCircle, Share, MoreHorizontal, Pin, Maximize } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
 
@@ -21,6 +21,7 @@ export interface Post {
   title: string
   content: string
   image?: string
+  archivo?: string
   likes: number
   comments: number
   shares: number
@@ -84,8 +85,8 @@ export function PostCard({ post, onDelete, onPin, isPinned, onEdit }: PostCardPr
     if (onPin) onPin(post.id);
   };
 
-  const typeInfo = typeConfig[post.type]
-  const priorityInfo = priorityConfig[post.priority]
+  const typeInfo = typeConfig[post.type] || typeConfig.comunicado
+  const priorityInfo = priorityConfig[post.priority] || priorityConfig.media
 
   return (
     <Card className={post.priority === "alta" ? "border-red-200 shadow-md" : ""}>
@@ -95,7 +96,7 @@ export function PostCard({ post, onDelete, onPin, isPinned, onEdit }: PostCardPr
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center space-x-3">
               <Avatar>
-                <AvatarImage src={post.author.avatar || "/placeholder.svg"} />
+                <AvatarImage src={post.author.avatar || "/logo_hospital.png"} />
                 <AvatarFallback>HN</AvatarFallback>
               </Avatar>
               <div>
@@ -166,56 +167,80 @@ export function PostCard({ post, onDelete, onPin, isPinned, onEdit }: PostCardPr
           )}
         </div>
 
-        {/* Imagen del post */}
-        {post.image && (
-          <div className="relative">
-            <Image
-              src={post.image || "/placeholder.svg"}
-              alt="Post image"
-              width={500}
-              height={300}
-              className="w-full object-cover"
-            />
+        {/* Documento adjunto */}
+        {post.archivo && (
+          <div className="px-4 pb-4">
+            {post.archivo.toLowerCase().endsWith('.pdf') ? (
+              <div className="relative w-full h-96 border rounded-xl overflow-hidden bg-gray-50 group shadow-sm">
+                <iframe
+                  src={`${post.archivo}#toolbar=0`}
+                  className="w-full h-full"
+                  title="Vista previa del documento"
+                >
+                  <p>Tu navegador no soporta visualización de PDF.</p>
+                </iframe>
+
+                {/* Overlay con botón para ver en pantalla completa */}
+                <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                  <a
+                    href={post.archivo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="pointer-events-auto flex items-center gap-2 bg-white text-gray-900 px-4 py-2 rounded-full shadow-lg font-medium hover:bg-gray-100 transition-transform hover:scale-105 active:scale-95"
+                  >
+                    <Maximize className="w-4 h-4" />
+                    Ver en pantalla completa
+                  </a>
+                </div>
+
+                {/* Botón flotante siempre visible en móvil o esquina */}
+                <div className="absolute bottom-3 right-3 pointer-events-auto md:hidden">
+                  <a
+                    href={post.archivo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center w-10 h-10 bg-white text-gray-700 rounded-full shadow-md border hover:bg-gray-50"
+                    title="Ver en pantalla completa"
+                  >
+                    <Maximize className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
+            ) : (
+              <a href={post.archivo} target="_blank" rel="noopener noreferrer" className="flex items-center p-3 bg-gray-50 border rounded hover:bg-gray-100 transition-colors">
+                <div className="p-2 bg-red-100 rounded mr-3">
+                  <svg className="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Documento Adjunto</p>
+                  <p className="text-xs text-gray-500">Clic para ver/descargar</p>
+                </div>
+              </a>
+            )}
           </div>
         )}
 
-        {/* Estadísticas */}
-        <div className="px-4 py-3 flex items-center justify-between text-sm text-gray-500 bg-gray-50">
-          <div className="flex items-center space-x-1">
-            <div className="flex -space-x-1">
-              <div className="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center">
-                <Heart className="h-3 w-3 text-white fill-current" />
-              </div>
+        {/* Imagen del post */}
+        {post.image && (
+          <div className="px-4 pb-4">
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-sm border border-gray-100 group">
+              <Image
+                src={post.image || "/placeholder.svg"}
+                alt={post.title}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+              />
             </div>
-            <span>{likesCount} reacciones</span>
           </div>
-          <div className="flex space-x-4">
-            <span>{post.comments} comentarios</span>
-            <span>{post.shares} compartidos</span>
-          </div>
-        </div>
+        )}
+
+
 
         <hr />
 
-        {/* Acciones */}
-        <div className="p-2 flex items-center justify-around">
-          <Button
-            variant="ghost"
-            className={`flex-1 ${liked ? "text-blue-600" : "text-gray-600"}`}
-            onClick={handleLike}
-          >
-            <Heart className={`h-4 w-4 mr-2 ${liked ? "fill-current" : ""}`} />
-            Me gusta
-          </Button>
-          <Button variant="ghost" className="flex-1 text-gray-600">
-            <MessageCircle className="h-4 w-4 mr-2" />
-            Comentar
-          </Button>
-          <Button variant="ghost" className="flex-1 text-gray-600">
-            <Share className="h-4 w-4 mr-2" />
-            Compartir
-          </Button>
-        </div>
+
       </CardContent>
     </Card>
   )
