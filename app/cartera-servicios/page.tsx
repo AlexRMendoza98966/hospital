@@ -75,8 +75,8 @@ export default function CarteraServiciosPage() {
                 </div>
             </div>
 
-            {/* Main Content Area - Banner Style Images */}
-            <div className="max-w-[1400px] mx-auto py-16 px-4">
+            {/* Main Content Area - Reduced Width for 30% smaller size */}
+            <div className="max-w-[1000px] mx-auto py-16 px-4">
                 {isLoading ? (
                     <div className="flex flex-col items-center justify-center py-40 space-y-4">
                         <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
