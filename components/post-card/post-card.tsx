@@ -78,7 +78,9 @@ export function PostCard({ post, onDelete, onPin, isPinned, onEdit }: PostCardPr
   };
 
   const handleDelete = () => {
-    if (onDelete) onDelete(post.id);
+    if (confirm("¿Estás seguro de que deseas eliminar esta publicación? Esta acción no se puede deshacer.")) {
+      if (onDelete) onDelete(post.id);
+    }
   };
 
   const handlePin = () => {

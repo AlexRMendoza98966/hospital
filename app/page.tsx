@@ -58,10 +58,21 @@ export default function HomePage() {
 	}, [loading]); // Reload when loading changes (e.g. after create)
 
 
-	// Eliminar publicación (Mocked for now in UI)
-	const handleDelete = (id: number) => {
-		setPosts((prev) => prev.filter((p) => p.id !== id));
-		if (pinnedId === id) setPinnedId(null);
+	// Eliminar publicación de la base de datos
+	const handleDelete = async (id: number) => {
+		try {
+			const { deleteComunicado } = await import("@/app/actions");
+			const result = await deleteComunicado(id);
+			if (result.success) {
+				setPosts((prev) => prev.filter((p) => p.id !== id));
+				if (pinnedId === id) setPinnedId(null);
+			} else {
+				alert(result.message);
+			}
+		} catch (error) {
+			console.error("Error al eliminar:", error);
+			alert("Error al intentar eliminar la publicación");
+		}
 	};
 
 	// Anclar publicación

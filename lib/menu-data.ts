@@ -13,8 +13,8 @@ export const menuItems: MenuItem[] = [
       { label: '1. Autoridades', href: '/autoridades-create-post' },
       { label: '2. Comité técnico administrativo', href: '/comite-tecnico-administrativo' },
       { label: '3. Académico', href: '/academico' },
-      { label: '4. Casos clínicos', href: '#' },
-      { label: '5. Residencia médica', href: '#' },
+      { label: '4. Casos clínicos', href: '/casos-clinicos' },
+      { label: '5. Residencia médica', href: '/residencia-medica' },
     ],
   },
   {
@@ -35,6 +35,12 @@ export const menuItems: MenuItem[] = [
     ],
   },
   { label: 'AUDITORIA', href: '/auditoria' },
-  { label: 'TRANSPARENCIA', href: '#' },
+  {
+    label: 'TRANSPARENCIA',
+    href: '#',
+    children: [
+      { label: 'Rendición de cuentas', href: '/rendicion-cuentas' },
+    ]
+  },
   { label: 'INICIAR SESIÓN', href: '/login' },
 ];

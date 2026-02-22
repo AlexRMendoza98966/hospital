@@ -123,3 +123,65 @@ export async function getComunicadoCounts() {
         return { anuncio: 0, comunicado: 0, convocatoria: 0 };
     }
 }
+export async function deleteComunicado(id: number) {
+    try {
+        const query = `
+          UPDATE public.comunicados
+          SET deleted_at = NOW()
+          WHERE id = $1;
+        `;
+        await pool.query(query, [id]);
+        revalidatePath("/");
+        return { success: true, message: "Publicación eliminada correctamente" };
+    } catch (error) {
+        console.error("Error deleting comunicado:", error);
+        return { success: false, message: "Error al eliminar la publicación" };
+    }
+}
+
+export async function getDepartamentos() {
+    try {
+        const query = `
+          SELECT * FROM public.departamentos
+          WHERE deleted_at IS NULL
+          ORDER BY nombre_departamento ASC;
+        `;
+        const result = await pool.query(query);
+        return result.rows;
+    } catch (error) {
+        console.error("Error fetching departamentos:", error);
+        return [];
+    }
+}
+
+export async function createDepartamento(nombre: string, icon: string) {
+    try {
+        const query = `
+          INSERT INTO public.departamentos (nombre_departamento, icon)
+          VALUES ($1, $2)
+          RETURNING *;
+        `;
+        await pool.query(query, [nombre, icon]);
+        revalidatePath("/");
+        return { success: true, message: "Departamento añadido correctamente" };
+    } catch (error) {
+        console.error("Error creating departamento:", error);
+        return { success: false, message: "Error al añadir el departamento" };
+    }
+}
+
+export async function deleteDepartamento(id: number) {
+    try {
+        const query = `
+          UPDATE public.departamentos
+          SET deleted_at = NOW()
+          WHERE id = $1;
+        `;
+        await pool.query(query, [id]);
+        revalidatePath("/");
+        return { success: true, message: "Departamento eliminado correctamente" };
+    } catch (error) {
+        console.error("Error deleting departamento:", error);
+        return { success: false, message: "Error al eliminar el departamento" };
+    }
+}
