@@ -30,8 +30,8 @@ export const menuItems: MenuItem[] = [
     label: 'INFORMACION',
     href: '#',
     children: [
-      { label: '1. Consulta externa', href: '#' },
-      { label: '2. Cartera de servicios', href: '#' },
+      { label: '1. Consulta externa', href: '/consulta-externa' },
+      { label: '2. Cartera de servicios', href: '/cartera-servicios' },
     ],
   },
   { label: 'AUDITORIA', href: '/auditoria' },
